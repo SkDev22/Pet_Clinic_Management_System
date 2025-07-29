@@ -3,11 +3,13 @@ const pool = require("../config/db");
 // Fetch all appointments
 const getAllAppointments = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM owners ORDER BY id DESC");
+    const result = await pool.query(
+      "SELECT * FROM appointments ORDER BY id DESC"
+    );
     res.json(result.rows);
   } catch (error) {
     console.log(error);
-    res.status(500).send("error fetching owners");
+    res.status(500).send("error fetching appintments");
   }
 };
 
