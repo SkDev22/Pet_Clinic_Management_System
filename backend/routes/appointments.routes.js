@@ -14,7 +14,7 @@ router.get("/", getAllAppointments);
 router.get("/appointmentdetails", getAppointmentsWithDetails);
 router.post("/", createAppointment);
 router.put("/update/:id", updateAppointment);
-router.patch("/update/:id/status", updateAppointment);
+router.patch("/update/:id/status", updateAppointmentStatus);
 router.delete("/delete/:id", deleteAppointment);
 
 module.exports = router;
