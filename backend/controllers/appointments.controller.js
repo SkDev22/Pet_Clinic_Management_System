@@ -14,15 +14,20 @@ const getAllAppointments = async (req, res) => {
 };
 
 // Fetch all appointments with details
+// pet_name, owner_name, doctor_name
 const getAppointmentsWithDetails = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM owners ORDER BY id DESC");
+    const result = await pool.query(
+      "SELECT a.*, name AS pet_name, name AS owner_name, name AS doctor_name FROM appointments a JOIN pets p ON a.pet_id = p.id JOIN owners o ON p.owner_id = o.id JOIN users u ON a.doctor_id = u.id ORDER BY a.date, a.time"
+    );
     res.json(result.rows);
   } catch (error) {
     console.log(error);
-    res.status(500).send("error fetching owners");
+    res.status(500).send("Error fetching appointment details");
   }
 };
+
+// TODO: ----------------------------------------
 
 // Create an appointment
 const createAppointment = async (req, res) => {
