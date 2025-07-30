@@ -31,16 +31,16 @@ const getAppointmentsWithDetails = async (req, res) => {
 
 // Create an appointment
 const createAppointment = async (req, res) => {
-  const { name, phone, email, address } = req.body;
+  const { pet_id, doctor_id, date, time, notes } = req.body;
   try {
     const result = await pool.query(
-      "INSERT INTO owners (name, phone, email, address) VALUES ($1, $2, $3, $4) RETURNING *",
-      [name, phone, email, address]
+      `INSERT INTO appointments (pet_id, doctor_id, date, time, status, notes) VALUES ($1, $2, $3, $4, 'pending', $5) RETURNING *`,
+      [pet_id, doctor_id, date, time, notes]
     );
-    res.json(result.rows[0]);
+    res.status(200).json(result.rows[0]);
   } catch (error) {
     console.log(error);
-    res.status(500).send("error creating owner");
+    res.status(500).send("Error creating appointment");
   }
 };
 
