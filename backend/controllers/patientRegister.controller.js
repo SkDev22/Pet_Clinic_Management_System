@@ -12,7 +12,7 @@ const registerPatient = async (req, res) => {
       "INSERT INTO owners (name, phone, email, address) VALUES ($1, $2, $3, $4) RETURNING *",
       [owner.name, owner.phone, owner.email, owner.address]
     );
-    const ownerId = ownerResults.rows[0].ownerId;
+    const ownerId = ownerResults.rows[0].id;
 
     const petResults = await client.query(
       "INSERT INTO pets (name, species, breed, gender, dob, owner_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",

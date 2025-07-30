@@ -14,11 +14,10 @@ const getAllAppointments = async (req, res) => {
 };
 
 // Fetch all appointments with details
-// pet_name, owner_name, doctor_name
 const getAppointmentsWithDetails = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT a.*, name AS pet_name, name AS owner_name, name AS doctor_name FROM appointments a JOIN pets p ON a.pet_id = p.id JOIN owners o ON p.owner_id = o.id JOIN users u ON a.doctor_id = u.id ORDER BY a.date, a.time"
+      "SELECT a.*, p.name AS pet_name, o.name AS owner_name, u.name AS doctor_name FROM appointments a LEFT JOIN pets p ON a.pet_id = p.id LEFT JOIN owners o ON p.owner_id = o.id LEFT JOIN users u ON a.doctor_id = u.id ORDER BY a.date, a.time"
     );
     res.json(result.rows);
   } catch (error) {
@@ -26,8 +25,6 @@ const getAppointmentsWithDetails = async (req, res) => {
     res.status(500).send("Error fetching appointment details");
   }
 };
-
-// TODO: ----------------------------------------
 
 // Create an appointment
 const createAppointment = async (req, res) => {
@@ -47,34 +44,34 @@ const createAppointment = async (req, res) => {
 // Update existing appointment
 const updateAppointment = async (req, res) => {
   const { id } = req.params;
-  const { name, phone, email, address } = req.body;
+  const { pet_id, doctor_id, date, time, status, notes } = req.body;
 
   try {
     const result = await pool.query(
-      "UPDATE owners SET name = $1, phone = $2, email = $3, address = $4 WHERE id = $5 RETURNING *",
-      [name, phone, email, address, id]
+      "UPDATE appointments SET pet_id = $1, doctor_id = $2, date = $3, time = $4, status = $5, notes = $6  WHERE id = $7 RETURNING *",
+      [pet_id, doctor_id, date, time, status, notes, id]
     );
     res.json(result.rows[0]);
   } catch (error) {
     console.log(error);
-    res.status(500).send("error updating owner");
+    res.status(500).send("error updating appointment");
   }
 };
 
 // Update appointment status
 const updateAppointmentStatus = async (req, res) => {
   const { id } = req.params;
-  const { name, phone, email, address } = req.body;
+  const { status } = req.body;
 
   try {
     const result = await pool.query(
-      "UPDATE owners SET name = $1, phone = $2, email = $3, address = $4 WHERE id = $5 RETURNING *",
-      [name, phone, email, address, id]
+      "UPDATE appointments SET status = $1 WHERE id = $2 RETURNING *",
+      [status, id]
     );
     res.json(result.rows[0]);
   } catch (error) {
     console.log(error);
-    res.status(500).send("error updating owner");
+    res.status(500).send("error updating appointment status");
   }
 };
 
@@ -82,11 +79,11 @@ const updateAppointmentStatus = async (req, res) => {
 const deleteAppointment = async (req, res) => {
   const { id } = req.params;
   try {
-    await pool.query("DELETE FROM owners WHERE id = $1", [id]);
-    res.send("owner deleted");
+    await pool.query("DELETE FROM appointments WHERE id = $1", [id]);
+    res.send("appointment deleted");
   } catch (error) {
     console.log(error);
-    res.status(500).send("error deleting owner");
+    res.status(500).send("error deleting appointment");
   }
 };
 
