@@ -1,6 +1,6 @@
-import pool from "../config/db.js";
+const pool = require("../config/db.js");
 
-export const createMedicalRecord = async (req, res) => {
+const createMedicalRecord = async (req, res) => {
   const { pet_id, doctor_id, diagnosis, notes, items } = req.body;
 
   const client = await pool.connect();

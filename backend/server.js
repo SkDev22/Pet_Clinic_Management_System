@@ -6,6 +6,7 @@ const ownersRoute = require("./routes/owners.routes");
 const petsRoute = require("./routes/pets.routes");
 const patientRegisterRoute = require("./routes/patientRegister.routes");
 const appointmentsRoute = require("./routes/appointments.routes");
+const medicalRecordsRoute = require("./routes/medicalRecords.routes");
 
 const app = express();
 const port = 3000;
@@ -20,6 +21,7 @@ app.use("/api/owners", ownersRoute);
 app.use("/api/pets", petsRoute);
 app.use("/api/patientregister", patientRegisterRoute);
 app.use("/api/appointments", appointmentsRoute);
+app.use("/api/medicalrecords", medicalRecordsRoute);
 
 app.listen(port, () => {
   console.log(`🤝 Server running on port ${port}`);
