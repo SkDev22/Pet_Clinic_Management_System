@@ -64,6 +64,20 @@ export const createMedicalRecord = async (req, res) => {
   }
 };
 
+// Get all medical records
+const getMedicalRecords = async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT mr.*, p.name as pet_name FROM medical_records mr LEFT JOIN pets p ON mr.pet_id = p.id ORDER BY mr.created_at DESC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching medical records:", err);
+    res.status(500).json({ error: "Failed to fetch medical records" });
+  }
+};
+
 module.exports = {
   createMedicalRecord,
+  getMedicalRecords,
 };
